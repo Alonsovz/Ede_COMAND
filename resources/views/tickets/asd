@@ -1,0 +1,61 @@
+<button class="col-lg-2 btn btn-info " id="btnRecibidosP" 
+    style="margin-right:5px;background-color:#61C0FE;color:black;width:18%;"> 
+    <b>
+        <span style="background-color:#61C0FE;color:black;font-size:20px;">
+            (Aún no iniciado)
+        </span> 
+        <span class="pull-right label" style="font-size:14px;color:white;background-color:#035373;">
+            {{$recibidos}}
+        </span>
+    </b>
+</button>
+
+
+
+<button class="col-lg-2 btn  btn-info" id="btnProcesos"
+    style="margin-right:5px;background-color:#DFFEFE;color:black;width:18%;">
+    <b>
+        <span> (En proceso ) </span>
+        <span class="pull-right label" style="font-size:14px;color:white;background-color:#035373;">
+            {{$process}} 
+        </span> 
+    </b>
+</button>
+
+
+<button style="background-color:#FDFF00;color:black;width:18%;" 
+    class="col-lg-2  btn btn-success" id="btnPausa">
+    <b>
+        <span>(En pausa)</span>
+        <span class="pull-right label" style="font-size:14px;color:white;background-color:#035373;">
+            {{$pausa}} 
+        </span>
+    </b>
+</button>
+
+
+<button style="margin-left: 5px; color:white;background-color:#80807F;" 
+    class="btn  btn-gray btn-md pull-right" id="btnCerrados" >
+    <b>
+        <span>
+            <i class="fa fa-ticket" ></i> Tickets recibidos cerrados
+        </span>
+        <span class="pull-right label" style="font-size:14px;color:white;background-color:#035373;">
+            {{$cerrados}} 
+        </span>
+    <b>
+</button>
+
+
+
+ <button  style="margin-left: 5px; color:white;" class="btn  btn-primary btn-md pull-right" 
+    id="completadostck" >
+    <b>
+        <span>
+            <i class="fa fa-hand-o-up" ></i> Tickets recibidos completados 
+        </span>
+        <span class="pull-right label" style="font-size:14px;color:white;background-color:#035373;">
+            {{$solu + $recha}}
+        </span>
+    </b>
+</button>

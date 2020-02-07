@@ -1,0 +1,1 @@
+<h1>Reserva {{Session::get('reservafinalizada')}} finalizada!!</h1>
