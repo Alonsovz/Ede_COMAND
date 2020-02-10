@@ -234,7 +234,7 @@ $(document).ready(function(){
            data:{id:this.id},
            success:function(data)
            {
-                $('#tablatickets').slideUp('slow');
+                $('#vistaTickets').slideUp('slow');
                 $('#divinfoticket').removeClass('hidden').slideDown('slow').append(data);
 
            }

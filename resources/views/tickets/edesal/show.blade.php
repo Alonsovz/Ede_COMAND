@@ -5,7 +5,31 @@
     <link rel="stylesheet" type="text/css" href="../css/plugins/dataTables/datatables.min.css">
     <link rel="stylesheet" type="text/css" href="../css/typeahead.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+<style>
+    .titulo1{
+        color: blue !important;
+        font-weight:bold;
+        margin-left:15px;
+        font-size:25px;
+    }
+    .titulo2{
+        color: green !important;
+        font-weight:bold;
+        margin-left:20px;
+        font-size:19px;
+    }
+    .tab-pane{
+        margin-top:30px;
+    }
 
+
+    .conteo{
+        font-size:14px;color:white;background-color:#035373;
+    }
+
+    
+
+</style>
 @stop
 
 
@@ -17,690 +41,1060 @@
     Tickets
 @stop
 
-@section('submodulo')
-    Recibidos
-@stop
+
 
 @section('contenido')
-    <div class="row" id="tablatickets">
-        <div class="col-lg-12">
+
+<div class="row">
+        <div class="col-l-12">
             <div class="ibox" style="border: lightgrey solid 1px;background-color:#FFFFFF">
-
-                <div class="ibox-title" style="padding: 15px; height: 125px">
-                
-                <a href="" style="margin-left: 5px; color:white;background-color:#80807F;" 
-                class="btn  btn-gray btn-md pull-right"   type="button" id="btnCerrados" >
-                
-                        <span><i class="fa fa-ticket" ></i> Tickets recibidos cerrados</span>
-            
-                        <span class="pull-right label" style="
-                     font-size:14px;color:white;background-color:#035373;">
-                         {{$cerrados}} </span> 
-                </a>
-                    <a  style="margin-left: 5px; color:white;" class="btn  btn-primary btn-md pull-right" 
-                    id="completadostck"  type="button" ><i class="fa fa-hand-o-up" ></i>
-                    <span> Tickets recibidos completados </span>
-                    <span class="pull-right label" style="
-                     font-size:14px;color:white;background-color:#035373;">
-                         {{$solu + $recha}}</span>
-                </a>
-                    <a  style="margin-left: 5px; color:black;" class="btn  btn-warning btn-md pull-right hidden" id="btn_recibidos"  type="button" ><i class="fa fa-ticket" ></i> Regresar</a>
-                   
-                    
-                    <div class="btn-group pull-left">
-                        <button data-toggle="dropdown" class="btn btn-gray btn-md dropdown-toggle" 
-                        style="background-color:purple;color:white;"><i class="fa fa-ticket"></i> Nuevo Ticket <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" id="" data-toggle="modal" data-target="#ticketgeneral">Ticket General</a></li>
-                            <li><a href="#" id="" data-toggle="modal" data-target="#ticketinformatica">Ticket Informatica</a></li>
-                            <li class="divider"></li>
-                            <li><a href="#" id="" data-toggle="modal" data-target="#autoticket">Auto-ticket</a></li>
-                        </ul>
-                    </div>
-                    <a href="tck_solicitadosedesal" style="margin-left: 5px; background-color:black;color:white" class="btn  btn-gray btn-md pull-left"   type="button" ><i class="fa fa-ticket" ></i> Tickets solictados</a>
-                    <br><br><br>
-                        <h2><i class="fa fa-calendar"></i> {{date('d/m/Y')}}</h2>
-                        <h3>
-                            <i class="fa fa-clock-o"></i> Tiempo dedicado segun bitacora <strong>
-
-                                    @foreach($dedicado as $d)
-                                    @if($d->tiempo>0)
-                                        {{$d->tiempo}} Hrs
-                                    @else 0 Hrs @endif
-                                    @endforeach
-                                </strong>
-                        </h3>                       
-                </div>
-                <br>
-                <div class="ibox-content" style="border: 1px solid #FFFFFF">
-                    <ul class="category-list pull-left." style="padding: 0" id="btnNav">
-                    <h2 style="color:blue;">&nbsp;&nbsp;<i class="fa fa-home"></i> <strong>
-                        Pantalla General</strong></h2><br>
-                    <li>
-                    <button class="col-lg-2 btn btn-info " id="btnRecibidosP" 
-                    style="margin-right:5px;background-color:#61C0FE;color:black;width:25%;"> 
-                    <b>
-                    
-                
-                    <span style="background-color:#61C0FE;color:black
-                    font-size:20px;">Recibidos (Aún no iniciado)</span> 
-                     <span class="pull-right label" style="
-                     font-size:14px;color:white;background-color:#035373;">{{$recibidos}}</span>
-                
-                    </b></button>
-                    </li>
-                    <li>
-                    <button class="col-lg-2 btn  btn-info" id="btnProcesos" style="margin-right:5px;width:25%;
-                    background-color:#DFFEFE;color:black;">
-                    <b>
-                         <span>Recibidos (En proceso ) </span>
-                         <span class="pull-right label" style="
-                         font-size:14px;color:white;background-color:#035373;">
-                         {{$process}} </span> 
-                    </b></button></li>
-                    <li><button 
-                         style="background-color:#FDFF00;color:black;width:25%;"
-                         class="col-lg-2  btn btn-success" id="btnPausa">
-                        <b>
-                        <span>Recibidos (En pausa)</span>
-                        <span class="pull-right label" style="
-                        font-size:14px;color:white;background-color:#035373;">
-                         {{$pausa}} </span>
-                    
-                        </b></button></li>
-                    </ul>
-                </div>
-
-             <div class="ibox-content" id="recibidostck" style="border: 1px solid #FFFFFF;">
-             
-                    <h1><i class="fa fa-ticket"></i> <strong>Tickets recibidos</strong>  (Aún no iniciados)...</h1><br>
-                    
-                    
-                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example"
-                           style="color: black;margin-top: 20px" >
-                        <thead id="header" class="">
-                        <tr style="background-color: lightgrey">
-                            <th style="border: solid 1px grey;">N° de ticket</th>
-                            <th style="border: solid 1px grey;" class="text-center"><i class="fa fa-clock-o"></i></th>
-                            <th style="border: solid 1px grey;">Titulo</th>
-                            <th style="border: solid 1px grey;">Solicitante</th>
-                            <th style="border: solid 1px grey;" class="text-center">Fecha de Solicitud</th>
-                            <th style="border: solid 1px grey;" class="text-center">Fecha de entrega</th>
-                            <th style="border: solid 1px grey;"></th>
-
-
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($tickets as $ticket)
-                                @if($ticket->estado=='Recibido')
-                                <tr style="background-color: deepskyblue;" id="dtRecibi">
-
-                                    <td style="border: solid 1px grey; "><b>{{$ticket->id}}</b></td>
-                                    <td style="border: solid 1px grey; width: 100px">
-                                       @if($ticket->estado=='En proceso')
-                                            <strong class="pull-left"><?php
-                                                $datetime1 = new DateTime("now");
-                                                $datetime2 = new DateTime($ticket->fechaentregareal);
-                                                $interval = date_diff($datetime1, $datetime2);
-                                                echo $interval->format('%R%a dias');
-                                                ?> restantes</strong><br>
-                                            <div class="progress" style="height: 10px;">
-                                                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                           @endif
-                                    </td>
-                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
-                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
-                                    <td style="border: solid 1px grey;" class="text-center">
-                                        <small>
-                                            <?php
-                                            $date=date_create($ticket->fechasolicitud);
-                                            echo date_format($date,"d/m/Y");
-                                            ?>
-                                        </small>
-                                    </td>
-                                    <td style="border: solid 1px grey;" class="text-center">
-                                        <small>
-                                            @if($ticket->estado=='En proceso')
-                                                    <?php
-                                                    $date=date_create($ticket->fechaentregareal);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @elseif($ticket->estado=='Recibido')
-                                                    <?php
-                                                    $date=date_create($ticket->fechasolaprox);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                            @endif
-                                        </small>
-                                    </td>
-                                    <td style="border: solid 1px grey;">
-                                        @if($ticket->estado=='Recibido')
-                                        <button id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default tck_infoticket" style="color:black">
-                                            <i class="fa fa-eye"></i> Ver
-                                        </button>
-                                        @endif
-                                        @if($ticket->estado=='En proceso')
-                                            <a href="administrarticket?id={{$ticket->id}}" style="border:solid 1px black" type="button" class="btn btn-md btn-default  btn_administrarticket" id="{{$ticket->id}}" >
-                                                <i class="fa fa-cog"></i> Administrar</a>
-                                        @endif
-                                    </td>
-
-                                </tr>
-                                    
-                                @endif
-                            @endforeach
-                        </tbody>
-                        <tfoot id="footer" class="hidden">
-                        <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-
-
-                <div class="ibox-content hidden" id="dtProcesos" style="border: 1px solid #FFFFFF">
-                    <h1><i class="fa fa-ticket"></i> <strong>Tickets recibidos</strong>  (En Proceso)... </h1><br>
-                    
-                    
-                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example"
-                           style="color: black;margin-top: 20px" >
-                        <thead id="header" class="">
-                        <tr style="background-color: lightgrey">
-                            <th style="border: solid 1px grey;">N° de ticket</th>
-                            <th style="border: solid 1px grey;" class="text-center"><i class="fa fa-clock-o"></i></th>
-                            <th style="border: solid 1px grey;">Titulo</th>
-                            <th style="border: solid 1px grey;">Solicitante</th>
-                            <th style="border: solid 1px grey;" class="text-center">Fecha de Solicitud</th>
-                            <th style="border: solid 1px grey;" class="text-center">Fecha de entrega</th>
-                            <th style="border: solid 1px grey;"></th>
-
-
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($tickets as $ticket)
+                <div class="ibox-title" style="padding: 15px;">
+                 
+                    <div class="tabbable-panel" id="vistaTickets">
+                            <ul class="nav nav-tabs">
+                                <li class="">
+                                    <a href="tck_edesalindex">
+                                        <i class="fa fa-arrow-up"></i>
+                                        <i class="fa fa-ticket"></i>
+                                         Nuevo ticket
+                                    </a>
+                                </li>
+                                <li class="active">
+                                    <a href="#vistaRecibidos" data-toggle="tab">
+                                        <i class="fa fa-arrow-down"></i>
+                                        Recibidos
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#vistaSolicitados" data-toggle="tab">
+                                        <i class="fa fa-arrow-up"></i>
+                                        Solicitados
+                                    </a>
+                                </li>
                                 
-                              
-                                    @if($ticket->estado=='En proceso')
-                                    <tr style="background-color: lightcyan">
+                            </ul>
+                        <div class="tabbable-line tabs-below">
+                            <div class="tab-content">                        
+                                <div class="tab-pane active" id="vistaRecibidos">
+                                    <h2 class="titulo1">
+                                        <img src="../images/ticketsImg/ticket.png" width="40" height="40">
+                                        <img src="../images/ticketsImg/paper-plane.png" width="40" height="40">
+                                       
+                                        Tickets Recibidos
+                                    </h2>
+                                  <div class="tabbable-panel">
+                                        <ul class="nav nav-tabs">
+                                            <li class="active">
+                                                <a href="#reciNoIniciados" data-toggle="tab">
+                                                    <i class="fa fa-eye"></i>
+                                                    <i class="fa fa-exclamation-circle"></i>
+                                                    Aun no iniciados
+                                                    <span class="pull-right label conteo">
+                                                        {{$recibidos}}
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a href="#reciProceso" data-toggle="tab">
+                                                    <i class="fa fa-cogs"></i>
+                                                    En Proceso
+                                                    <span class="pull-right label conteo">
+                                                        {{$process}} 
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        
+                                            <li class="">
+                                                <a href="#reciCompletados" data-toggle="tab">
+                                                    <i class="fa fa-check-circle"></i>
+                                                    Solucionado 
+                                                    <span class="pull-right label conteo">
+                                                        {{$solu}} 
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            <li class="">
+                                                <a href="#reciCerrados" data-toggle="tab">
+                                                    <i class="fa fa-archive"></i>
+                                                    Cerrados
+                                                    <span class="pull-right label conteo">
+                                                        {{$cerrados}}
+                                                        </span>
+                                                </a>
+                                            </li>
 
-                                        <td style="border: solid 1px grey;"><b>{{$ticket->id}}</b></td>
-                                        <td style="border: solid 1px grey; width: 100px">
-                                            @if($ticket->estado=='En proceso')
-                                                <strong class="pull-left"><?php
-                                                    $datetime1 = new DateTime("now");
-                                                    $datetime2 = new DateTime($ticket->fechaentregareal);
-                                                    $interval = date_diff($datetime1, $datetime2);
-                                                    echo $interval->format('%R%a dias');
-                                                    ?> restantes</strong><br>
-                                                <div class="progress" style="height: 10px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <li class="">
+                                                <a href="#reciRechazados" data-toggle="tab">
+                                                <i class="fa fa-close"></i>
+                                                Rechazados
+                                                <span class="pull-right label conteo">
+                                                {{$recha}} </span>
+                                                </a>
+                                            </li>
+
+                                            
+                                        </ul>
+                                        <div class="tabbable-line tabs-below">
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="reciNoIniciados">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                        <h2 class="titulo2">
+                                                        <img src="../images/ticketsImg/timer.png" width="40" height="40">
+                                                        Aún no Iniciados</h2>
+                                                    <div class="row" style="border-top: 1px solid black;"></div><br>
+
+                                                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example"
+                                                        style="color: black;margin-top: 20px" >
+                                                        <thead id="header" class="">
+                                                        <tr style="background-color: lightgrey">
+                                                            <th style="border: solid 1px grey;">N° de ticket</th>
+                                                            <th style="border: solid 1px grey;" class="text-center"><i class="fa fa-clock-o"></i></th>
+                                                            <th style="border: solid 1px grey;">Titulo</th>
+                                                            <th style="border: solid 1px grey;">Solicitante</th>
+                                                            <th style="border: solid 1px grey;" class="text-center">Fecha de Solicitud</th>
+                                                            <th style="border: solid 1px grey;" class="text-center">Fecha de entrega</th>
+                                                            <th style="border: solid 1px grey;"></th>
+
+
+
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($tickets as $ticket)
+                                                                @if($ticket->estado=='Recibido')
+                                                                <tr style="background-color: deepskyblue;" id="dtRecibi">
+
+                                                                    <td style="border: solid 1px grey; "><b>{{$ticket->id}}</b></td>
+                                                                    <td style="border: solid 1px grey; width: 100px">
+                                                                    @if($ticket->estado=='En proceso')
+                                                                            <strong class="pull-left"><?php
+                                                                                $datetime1 = new DateTime("now");
+                                                                                $datetime2 = new DateTime($ticket->fechaentregareal);
+                                                                                $interval = date_diff($datetime1, $datetime2);
+                                                                                echo $interval->format('%R%a dias');
+                                                                                ?> restantes</strong><br>
+                                                                            <div class="progress" style="height: 10px;">
+                                                                                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                            </div>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
+                                                                    <td style="border: solid 1px grey;" class="text-center">
+                                                                        <small>
+                                                                            <?php
+                                                                            $date=date_create($ticket->fechasolicitud);
+                                                                            echo date_format($date,"d/m/Y");
+                                                                            ?>
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;" class="text-center">
+                                                                        <small>
+                                                                            @if($ticket->estado=='En proceso')
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechaentregareal);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                                @elseif($ticket->estado=='Recibido')
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechasolaprox);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                            @endif
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        @if($ticket->estado=='Recibido')
+                                                                        <button id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default tck_infoticket" style="color:black">
+                                                                            <i class="fa fa-eye"></i> Ver
+                                                                        </button>
+                                                                        @endif
+                                                                        @if($ticket->estado=='En proceso')
+                                                                            <a href="administrarticket?id={{$ticket->id}}" style="border:solid 1px black" type="button" class="btn btn-md btn-default  btn_administrarticket" id="{{$ticket->id}}" >
+                                                                                <i class="fa fa-cog"></i> Administrar</a>
+                                                                        @endif
+                                                                    </td>
+
+                                                                </tr>
+                                                                    
+                                                                @endif
+                                                            @endforeach
+                                                        </tbody>
+                                                        <tfoot id="footer" class="hidden">
+                                                        <tr>
+                                                            <th>Rendering engine</th>
+                                                            <th>Browser</th>
+                                                            <th>Platform(s)</th>
+                                                            <th>Engine version</th>
+                                                            <th>CSS grade</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
                                                 </div>
-                                            @endif
-                                        </td>
-                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
-                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
-                                        <td style="border: solid 1px grey;" class="text-center">
-                                            <small>
-                                                <?php
-                                                $date=date_create($ticket->fechasolicitud);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            </small>
-                                        </td>
-                                        <td style="border: solid 1px grey;" class="text-center">
-                                            <small>
-                                                @if($ticket->estado=='En proceso')
-                                                    <?php
-                                                    $date=date_create($ticket->fechaentregareal);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @elseif($ticket->estado=='Recibido')
-                                                    <?php
-                                                    $date=date_create($ticket->fechasolaprox);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @endif
-                                            </small>
-                                        </td>
-                                        <td style="border: solid 1px grey;">
-                                            @if($ticket->estado=='Recibido')
-                                                <button id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
-                                                    <i class="fa fa-eye"></i> Ver
-                                                </button>
-                                            @endif
-                                            @if($ticket->estado=='En proceso')
-                                                <a href="administrarticket?id={{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn_administrarticket" id="{{$ticket->id}}" >
-                                                    <i class="fa fa-cog"></i> Administrar</a>
-                                            @endif
-                                        </td>
+                                                <div class="tab-pane" id="reciProceso">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                        <h2 class="titulo2">
+                                                        <img src="../images/ticketsImg/process.png" width="40" height="40">
+                                                        En Proceso</h2>
+                                                    <div class="row" style="border-top: 1px solid black;"></div><br>
 
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                        <tfoot id="footer" class="hidden">
-                        <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
+
+                                                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example"
+                                                        style="color: black;margin-top: 20px" >
+                                                        <thead id="header" class="">
+                                                        <tr style="background-color: lightgrey">
+                                                            <th style="border: solid 1px grey;">N° de ticket</th>
+                                                            <th style="border: solid 1px grey;" class="text-center"><i class="fa fa-clock-o"></i></th>
+                                                            <th style="border: solid 1px grey;">Titulo</th>
+                                                            <th style="border: solid 1px grey;">Solicitante</th>
+                                                            <th style="border: solid 1px grey;" class="text-center">Fecha de Solicitud</th>
+                                                            <th style="border: solid 1px grey;" class="text-center">Fecha de entrega</th>
+                                                            <th style="border: solid 1px grey;"></th>
 
 
 
-                <div class="ibox-content hidden" id="dtPausas" style="border: 1px solid #FFFFFF">
-                    <h1><i class="fa fa-ticket"></i> <strong>Tickets recibidos</strong>  (En Pausa)... </h1><br>
-                    
-                    
-                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example"
-                           style="color: black;margin-top: 20px" >
-                        <thead id="header" class="">
-                        <tr style="background-color: lightgrey">
-                            <th style="border: solid 1px grey;">N° de ticket</th>
-                            <th style="border: solid 1px grey;" class="text-center"><i class="fa fa-clock-o"></i></th>
-                            <th style="border: solid 1px grey;">Titulo</th>
-                            <th style="border: solid 1px grey;">Solicitante</th>
-                            <th style="border: solid 1px grey;" class="text-center">Fecha de Solicitud</th>
-                            <th style="border: solid 1px grey;" class="text-center">Fecha de entrega</th>
-                            <th style="border: solid 1px grey;"></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($tickets as $ticket)
+                                                                
+                                                            
+                                                                    @if($ticket->estado=='En proceso')
+                                                                    <tr style="background-color: lightcyan">
 
+                                                                        <td style="border: solid 1px grey;"><b>{{$ticket->id}}</b></td>
+                                                                        <td style="border: solid 1px grey; width: 100px">
+                                                                            @if($ticket->estado=='En proceso')
+                                                                                <strong class="pull-left"><?php
+                                                                                    $datetime1 = new DateTime("now");
+                                                                                    $datetime2 = new DateTime($ticket->fechaentregareal);
+                                                                                    $interval = date_diff($datetime1, $datetime2);
+                                                                                    echo $interval->format('%R%a dias');
+                                                                                    ?> restantes</strong><br>
+                                                                                <div class="progress" style="height: 10px;">
+                                                                                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                                </div>
+                                                                            @endif
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
+                                                                        <td style="border: solid 1px grey;" class="text-center">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolicitud);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;" class="text-center">
+                                                                            <small>
+                                                                                @if($ticket->estado=='En proceso')
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechaentregareal);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                                @elseif($ticket->estado=='Recibido')
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechasolaprox);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                                @endif
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            @if($ticket->estado=='Recibido')
+                                                                                <button id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                    <i class="fa fa-eye"></i> Ver
+                                                                                </button>
+                                                                            @endif
+                                                                            @if($ticket->estado=='En proceso')
+                                                                                <a href="administrarticket?id={{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn_administrarticket" id="{{$ticket->id}}" >
+                                                                                    <i class="fa fa-cog"></i> Administrar</a>
+                                                                            @endif
+                                                                        </td>
 
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($tickets as $ticket)
-                        
-                              
-                            @if($ticket->estado=='En pausa')
-                                    <tr style="background-color: yellow">
-
-                                        <td style="border: solid 1px grey;"><b>{{$ticket->id}}</b></td>
-                                        <td style="border: solid 1px grey; width: 100px">
-                                            @if($ticket->estado=='En proceso')
-                                                <strong class="pull-left"><?php
-                                                    $datetime1 = new DateTime("now");
-                                                    $datetime2 = new DateTime($ticket->fechaentregareal);
-                                                    $interval = date_diff($datetime1, $datetime2);
-                                                    echo $interval->format('%R%a dias');
-                                                    ?> restantes</strong><br>
-                                                <div class="progress" style="height: 10px;">
-                                                    <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </tr>
+                                                                @endif
+                                                            @endforeach
+                                                        </tbody>
+                                                        <tfoot id="footer" class="hidden">
+                                                        <tr>
+                                                            <th>Rendering engine</th>
+                                                            <th>Browser</th>
+                                                            <th>Platform(s)</th>
+                                                            <th>Engine version</th>
+                                                            <th>CSS grade</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
                                                 </div>
-                                            @endif
-                                        </td>
-                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
-                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
-                                        <td style="border: solid 1px grey;" class="text-center">
-                                            <small>
-                                                <?php
-                                                $date=date_create($ticket->fechasolicitud);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            </small>
-                                        </td>
-                                        <td style="border: solid 1px grey;" class="text-center">
-                                            <small>
-                                                @if($ticket->estado=='En proceso')
-                                                    <?php
-                                                    $date=date_create($ticket->fechaentregareal);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @elseif($ticket->estado=='Recibido')
-                                                    <?php
-                                                    $date=date_create($ticket->fechasolaprox);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @endif
-                                            </small>
-                                        </td>
-                                        <td style="border: solid 1px grey;">
-                                            @if($ticket->estado=='Recibido')
-                                                <button id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
-                                                    <i class="fa fa-eye"></i> Ver
-                                                </button>
-                                            @endif
-                                            @if($ticket->estado=='En proceso' || $ticket->estado=='En pausa')
-                                                <a href="administrarticket?id={{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn_administrarticket" id="{{$ticket->id}}" >
-                                                    <i class="fa fa-cog"></i> Administrar</a>
-                                            @endif
-                                        </td>
+                                                <div class="tab-pane" id="reciCompletados">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                        <h2 class="titulo2">
+                                                        <img src="../images/ticketsImg/work.png" width="40" height="40">
+                                                        Completados</h2>
+                                                    <div class="row" style="border-top: 1px solid black;"></div><br>
 
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                        <tfoot id="footer" class="hidden">
-                        <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                                                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                        <thead id="header" class="">
+                                                        <tr style="background-color: lightgrey">
+                                                            <th style="border: solid 1px grey;">N° de ticket</th>
+                                                            <th style="border: solid 1px grey;">Estado</th>
+                                                            <th style="border: solid 1px grey;">Titulo</th>
+                                                            <th style="border: solid 1px grey;">Solicitante</th>
+                                                            <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                            <th style="border: solid 1px grey;">Fecha de Entrega</th>
+                                                            <th style="border: solid 1px grey;"></th>
 
-                <div id="btnNavS" class="ibox-content hidden" style="border: 1px solid #FFFFFF">
-                    <ul class="category-list pull-left." style="padding: 0">
-                        <li><button class="col-lg-2 btn  btn-info hidden" id="btnSolucionados" 
-                        style="margin-right:5px;background-color: #57B495;width:23%;"> <b>
-                           <span> Recibidos (Solucionados) </span>
-                           <span class="pull-right label" style="
-                        font-size:14px;color:white;background-color:#035373;">
-                         {{$solu}} </span>
-                        </b></button></li>
-                        <li>
 
-                        <li><button class="col-lg-2 btn  btn-info" id="btnRechazados" 
-                        style="margin-right:5px;background-color: #E85465;width:23%;">
-                        <b>
-                            <span>Recibidos (Rechazados)</span>
 
-                            <span class="pull-right label" style="
-                        font-size:14px;color:white;background-color:#035373;">
-                         {{$recha}} </span>
-                        </b></button></li>
-                        <li>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($tickets as $ticket)
+                                                            @if($ticket->estado=='Solucionado')
+                                                                <tr>
+                                                                    <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                    @if($ticket->estado=='Recibido')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='En proceso')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Solucionado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Rechazado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                    @endif
+                                                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <small>
+                                                                            <?php
+                                                                            $date=date_create($ticket->fechasolicitud);
+                                                                            echo date_format($date,"d/m/Y");
+                                                                            ?>
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <small>
+                                                                            @if($ticket->estado==='En proceso' )
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechaentregareal);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            @elseif($ticket->estado==='Solucionado' || $ticket->estado==='Cerrado')
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolucion);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            @elseif($ticket->estado=='Recibido')
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolaprox);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            @endif
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <a href="administrarticket?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                            <i class="fa fa-eye"></i> Ver
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                        </tbody>
+                                                        <tfoot id="footer" class="hidden">
+                                                        <tr>
+                                                            <th>Rendering engine</th>
+                                                            <th>Browser</th>
+                                                            <th>Platform(s)</th>
+                                                            <th>Engine version</th>
+                                                            <th>CSS grade</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                                <div class="tab-pane" id="reciCerrados">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                        <h2 class="titulo2">
+                                                        <img src="../images/ticketsImg/close.png" width="40" height="40">
+                                                        Cerrados</h2>
+                                                    <div class="row" style="border-top: 1px solid black;"></div><br>
+                                                    <table id="reservasdenegadas" 
+                                                        class="dataTables-example1 table table-hover table-responsive table-striped
+                                                        table-mail dataTables-example" style="color: black;margin-top: 20px;width:100%;" >
+                                                            <thead id="header" class="">
+                                                            <tr style="background-color: lightgrey">
+                                                                <th style="border: solid 1px grey;">N° de ticket</th>
+                                                                <th style="border: solid 1px grey;">Estado</th>
+                                                                <th style="border: solid 1px grey;">Titulo</th>
+                                                                <th style="border: solid 1px grey;">Solicitante</th>
+                                                                <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                                <th style="border: solid 1px grey;">Fecha de Entrega</th>
+                                                                <th style="border: solid 1px grey;"></td>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($tickets as $ticket)
+                                                                @if($ticket->estado=='Cerrado')
+                                                                    <tr>
+                                                                        <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                        @if($ticket->estado=='Recibido')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En proceso')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Solucionado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cerrado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @endif
+                                                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolicitud);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                @if($ticket->estado==='En proceso' )
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechaentregareal);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                                @elseif($ticket->estado==='Solucionado' || $ticket->estado==='Cerrado')
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechasolucion);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                                @elseif($ticket->estado=='Recibido')
+                                                                                    <?php
+                                                                                    $date=date_create($ticket->fechasolaprox);
+                                                                                    echo date_format($date,"d/m/Y");
+                                                                                    ?>
+                                                                                @endif
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <a href="administrarticket?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                <i class="fa fa-eye"></i> Ver
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endif
+                                                            @endforeach
+                                                            </tbody>
+                                                            <tfoot id="footer" class="hidden">
+                                                            <tr>
+                                                                <th>Rendering engine</th>
+                                                                <th>Browser</th>
+                                                                <th>Platform(s)</th>
+                                                                <th>Engine version</th>
+                                                                <th>CSS grade</th>
+                                                            </tr>
+                                                            </tfoot>
+                                                    </table>
+                                                </div>
 
-                    </ul>
-                </div>
+                                                <div class="tab-pane" id="reciRechazados">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                        <h2 class="titulo2">
+                                                        <img src="../images/ticketsImg/cancel.png" width="40" height="40">
+                                                        Rechazados</h2>
+                                                    <div class="row" style="border-top: 1px solid black;"></div><br>
+                                                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                        <thead id="header" class="">
+                                                        <tr style="background-color: lightgrey">
+                                                            <th style="border: solid 1px grey;">N° de ticket</th>
+                                                            <th style="border: solid 1px grey;">Estado</th>
+                                                            <th style="border: solid 1px grey;">Titulo</th>
+                                                            <th style="border: solid 1px grey;">Solicitante</th>
+                                                            <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                            <th style="border: solid 1px grey;">Fecha de Entrega</th>
+                                                            <th style="border: solid 1px grey;"></th>
 
-                <div class="ibox-content hidden" id="completados" style="border: 1px solid #FFFFFF">
+
+
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($tickets as $ticket)
+                                                            @if($ticket->estado=='Rechazado')
+                                                                <tr>
+                                                                    <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                    @if($ticket->estado=='Recibido')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='En proceso')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Solucionado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Rechazado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                    @endif
+                                                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <small>
+                                                                            <?php
+                                                                            $date=date_create($ticket->fechasolicitud);
+                                                                            echo date_format($date,"d/m/Y");
+                                                                            ?>
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <small>
+                                                                            @if($ticket->estado==='En proceso' )
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechaentregareal);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            @elseif($ticket->estado==='Solucionado' || $ticket->estado==='Cerrado')
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolucion);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            @elseif($ticket->estado=='Recibido')
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolaprox);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            @endif
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <a href="administrarticket?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                            <i class="fa fa-eye"></i> Ver
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                        </tbody>
+                                                        <tfoot id="footer" class="hidden">
+                                                        <tr>
+                                                            <th>Rendering engine</th>
+                                                            <th>Browser</th>
+                                                            <th>Platform(s)</th>
+                                                            <th>Engine version</th>
+                                                            <th>CSS grade</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                  </div>
+
+
+
+
+
+                                </div>
+                                <div class="tab-pane" id="vistaSolicitados">
+                                    <h2 class="titulo1">
+                                        <img src="../images/ticketsImg/ticket.png" width="40" height="40">
+                                        <img src="../images/ticketsImg/origami.png" width="40" height="40">
+                                        Tickets Solicitados
+                                    </h2>
+                                    <div class="tabbable-panel">
+                                            <ul class="nav nav-tabs">
+                                                <li class="active">
+                                                    <a href="#soliRecibidos" data-toggle="tab">
+                                                        <i class="fa fa-eye"></i>
+                                                        <i class="fa fa-check"></i>
+                                                        Recibidos 
+                                                        <span class="pull-right label conteo">
+                                                            {{$recibidosSoli}} 
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#soliProceso" data-toggle="tab">
+                                                        <i class="fa fa-cogs"></i>
+                                                        En Proceso
+                                                        <span class="pull-right label conteo">
+                                                                {{$processSoli}} 
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            
+                                                <li class="">
+                                                    <a href="#soliSolucionados" data-toggle="tab">
+                                                        <i class="fa fa-check-circle"></i>
+                                                        Solucionados
+                                                        
+                                                        <span class="pull-right label conteo">
+                                                            {{$soluSoli}} 
+                                                        </span>
+                                                        </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#soliRechazados" data-toggle="tab">
+                                                        <i class="fa fa-close"></i>
+                                                        Rechazados
+                                                        <span class="pull-right label conteo">
+                                                            {{$rechaSoli}} 
+                                                        </span>
+                                                        </a>
+                                                </li>
+                                                <li class="">
+                                                    <a href="#soliCerrados" data-toggle="tab">
+                                                        <i class="fa fa-archive"></i>
+                                                        Cerrados
+                                                        <span class="pull-right label conteo">
+                                                            {{$cerradoSoli}} 
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                            <div class="tabbable-line tabs-below">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="soliRecibidos">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                        <h2 class="titulo2">
+                                                        <img src="../images/ticketsImg/request.png" width="40" height="40">
+                                                        Recibidos</h2>
+                                                    <div class="row" style="border-top: 1px solid black;"></div><br>
+                                                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                        <thead id="header" class="">
+                                                        <tr style="background-color: lightgrey">
+                                                            <th style="border: solid 1px grey;">N° de ticket</th>
+                                                            <th style="border: solid 1px grey;">Estado</th>
+                                                            <th style="border: solid 1px grey;">Titulo</th>
+                                                            <th style="border: solid 1px grey;">Usuario Asignado</th>
+                                                            <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                            <th style="border: solid 1px grey;">F. Solucion aproximada</th>
+                                                            <th style="border: solid 1px grey;"></th>
+
+
+
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach($ticketsSoli as $ticket)
+                                                        @if($ticket->estado == 'Recibido')
+                                                                <tr>
+                                                                    <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                    @if($ticket->estado=='Recibido')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='En proceso')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Solucionado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Cerrado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Rechazado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='En pausa')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-info">{{$ticket->estado}}</span></td>
+                                                                    @elseif($ticket->estado=='Cancelado')
+                                                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                    @endif
+                                                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombreasignado}} {{$ticket->apellidoasignado}}</b></small></td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <small>
+                                                                            <?php
+                                                                            $date=date_create($ticket->fechasolicitud);
+                                                                            echo date_format($date,"d/m/Y");
+                                                                            ?>
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+                                                                        <small>
+                                                                            <?php
+                                                                            $date=date_create($ticket->fechasolaprox);
+                                                                            echo date_format($date,"d/m/Y");
+                                                                            ?>
+                                                                        </small>
+                                                                    </td>
+                                                                    <td style="border: solid 1px grey;">
+
+                                                                                <a href="verticketsolicitado?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                    <i class="fa fa-eye"></i> Ver
+                                                                                </a>
+
+
+                                                                    </td>
+
+                                                                </tr>
+                                                                @endif
+                                                        @endforeach
+                                                        </tbody>
+                                                        <tfoot id="footer" class="hidden">
+                                                        <tr>
+                                                            <th>Rendering engine</th>
+                                                            <th>Browser</th>
+                                                            <th>Platform(s)</th>
+                                                            <th>Engine version</th>
+                                                            <th>CSS grade</th>
+                                                        </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                        
+                                                    </div>
+                                                    <div class="tab-pane" id="soliProceso">
+                                                        <div class="row" style="border-top: 1px solid black;"></div>
+                                                            <h2 class="titulo2">
+                                                            <img src="../images/ticketsImg/process.png" width="40" height="40">
+                                                            En Proceso</h2>
+                                                        <div class="row" style="border-top: 1px solid black;"></div><br>
+
+                                                        
+
+
+                                                        <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                            <thead id="header" class="">
+                                                            <tr style="background-color: lightgrey">
+                                                                <th style="border: solid 1px grey;">N° de ticket</th>
+                                                                <th style="border: solid 1px grey;">Estado</th>
+                                                                <th style="border: solid 1px grey;">Titulo</th>
+                                                                <th style="border: solid 1px grey;">Usuario Asignado</th>
+                                                                <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                                <th style="border: solid 1px grey;">F. Solucion aproximada</th>
+                                                                <th style="border: solid 1px grey;"></th>
+
+
+
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($ticketsSoli as $ticket)
+                                                            @if($ticket->estado == 'En proceso')
+                                                                    <tr>
+                                                                        <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                        @if($ticket->estado=='Recibido')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En proceso')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Solucionado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cerrado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Rechazado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En pausa')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-info">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cancelado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @endif
+                                                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombreasignado}} {{$ticket->apellidoasignado}}</b></small></td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolicitud);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolaprox);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+
+                                                                                    <a href="verticketsolicitado?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                        <i class="fa fa-eye"></i> Ver
+                                                                                    </a>
+
+
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    @endif
+                                                            @endforeach
+                                                            </tbody>
+                                                            <tfoot id="footer" class="hidden">
+                                                            <tr>
+                                                                <th>Rendering engine</th>
+                                                                <th>Browser</th>
+                                                                <th>Platform(s)</th>
+                                                                <th>Engine version</th>
+                                                                <th>CSS grade</th>
+                                                            </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                    <div class="tab-pane" id="soliSolucionados">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                            <h2 class="titulo2">
+                                                            <img src="../images/ticketsImg/work.png" width="40" height="40">
+                                                            Solucionados</h2>
+                                                        <div class="row" style="border-top: 1px solid black;"></div><br>
+
+
+                                                        <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                            <thead id="header" class="">
+                                                            <tr style="background-color: lightgrey">
+                                                                <th style="border: solid 1px grey;">N° de ticket</th>
+                                                                <th style="border: solid 1px grey;">Estado</th>
+                                                                <th style="border: solid 1px grey;">Titulo</th>
+                                                                <th style="border: solid 1px grey;">Usuario Asignado</th>
+                                                                <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                                <th style="border: solid 1px grey;">F. Solucion aproximada</th>
+                                                                <th style="border: solid 1px grey;"></th>
+
+
+
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($ticketsSoli as $ticket)
+                                                            @if($ticket->estado == 'Solucionado')
+                                                                    <tr>
+                                                                        <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                        @if($ticket->estado=='Recibido')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En proceso')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Solucionado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cerrado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Rechazado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En pausa')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-info">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cancelado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @endif
+                                                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombreasignado}} {{$ticket->apellidoasignado}}</b></small></td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolicitud);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolaprox);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+
+                                                                                    <a href="verticketsolicitado?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                        <i class="fa fa-eye"></i> Ver
+                                                                                    </a>
+
+
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    @endif
+                                                            @endforeach
+                                                            </tbody>
+                                                            <tfoot id="footer" class="hidden">
+                                                            <tr>
+                                                                <th>Rendering engine</th>
+                                                                <th>Browser</th>
+                                                                <th>Platform(s)</th>
+                                                                <th>Engine version</th>
+                                                                <th>CSS grade</th>
+                                                            </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                    <div class="tab-pane" id="soliRechazados">
+                                                        <div class="row" style="border-top: 1px solid black;"></div>
+                                                            <h2 class="titulo2">
+                                                            <img src="../images/ticketsImg/cancel.png" width="40" height="40">
+                                                            Rechazados</h2>
+                                                        <div class="row" style="border-top: 1px solid black;"></div><br>
+                                                        <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                            <thead id="header" class="">
+                                                            <tr style="background-color: lightgrey">
+                                                                <th style="border: solid 1px grey;">N° de ticket</th>
+                                                                <th style="border: solid 1px grey;">Estado</th>
+                                                                <th style="border: solid 1px grey;">Titulo</th>
+                                                                <th style="border: solid 1px grey;">Usuario Asignado</th>
+                                                                <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                                <th style="border: solid 1px grey;">F. Solucion aproximada</th>
+                                                                <th style="border: solid 1px grey;"></th>
+
+
+
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($ticketsSoli as $ticket)
+                                                            @if($ticket->estado == 'Rechazado')
+                                                                    <tr>
+                                                                        <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                        @if($ticket->estado=='Recibido')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En proceso')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Solucionado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cerrado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Rechazado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En pausa')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-info">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cancelado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @endif
+                                                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombreasignado}} {{$ticket->apellidoasignado}}</b></small></td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolicitud);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolaprox);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+
+                                                                                    <a href="verticketsolicitado?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                        <i class="fa fa-eye"></i> Ver
+                                                                                    </a>
+
+
+                                                                        </td>
+
+                                                                    </tr>
+                                                                    @endif
+                                                            @endforeach
+                                                            </tbody>
+                                                            <tfoot id="footer" class="hidden">
+                                                            <tr>
+                                                                <th>Rendering engine</th>
+                                                                <th>Browser</th>
+                                                                <th>Platform(s)</th>
+                                                                <th>Engine version</th>
+                                                                <th>CSS grade</th>
+                                                            </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                                    <div class="tab-pane" id="soliCerrados">
+                                                    <div class="row" style="border-top: 1px solid black;"></div>
+                                                            <h2 class="titulo2">
+                                                            <img src="../images/ticketsImg/close.png" width="40" height="40">
+                                                            Cerrados</h2>
+                                                        <div class="row" style="border-top: 1px solid black;"></div><br>
+
+
+                                                        <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
+                                                            <thead id="header" class="">
+                                                            <tr style="background-color: lightgrey">
+                                                                <th style="border: solid 1px grey;">N° de ticket</th>
+                                                                <th style="border: solid 1px grey;">Estado</th>
+                                                                <th style="border: solid 1px grey;">Titulo</th>
+                                                                <th style="border: solid 1px grey;">Usuario Asignado</th>
+                                                                <th style="border: solid 1px grey;">Fecha de Solicitud</th>
+                                                                <th style="border: solid 1px grey;">F. Solucion aproximada</th>
+                                                                <th style="border: solid 1px grey;"></th>
+                                    
+                                    
+                                    
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach($ticketsSoli as $ticket)
+                                                            @if($ticket->estado=='Cerrado')
+                                                                    <tr>
+                                                                        <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
+                                                                        @if($ticket->estado=='Recibido')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En proceso')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Solucionado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cerrado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Rechazado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='En pausa')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-info">{{$ticket->estado}}</span></td>
+                                                                        @elseif($ticket->estado=='Cancelado')
+                                                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
+                                                                        @endif
+                                                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
+                                                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombreasignado}} {{$ticket->apellidoasignado}}</b></small></td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolicitud);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                                                            <small>
+                                                                                <?php
+                                                                                $date=date_create($ticket->fechasolaprox);
+                                                                                echo date_format($date,"d/m/Y");
+                                                                                ?>
+                                                                            </small>
+                                                                        </td>
+                                                                        <td style="border: solid 1px grey;">
+                                    
+                                                                                    <a href="verticketsolicitado?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
+                                                                                        <i class="fa fa-eye"></i> Ver
+                                                                                    </a>
+                                    
+                                    
+                                                                        </td>
+                                    
+                                                                    </tr>
+                                                                @endif
+                                                            @endforeach
+                                                            </tbody>
+                                                            <tfoot id="footer" class="hidden">
+                                                            <tr>
+                                                                <th>Rendering engine</th>
+                                                                <th>Browser</th>
+                                                                <th>Platform(s)</th>
+                                                                <th>Engine version</th>
+                                                                <th>CSS grade</th>
+                                                            </tr>
+                                                            </tfoot>
+                                                        </table>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                    </div>
+
+                                
+
+
+
+                                </div>
+                            </div>
+                            
+                        </div>
+			        </div>
+
                     
-                    
-
-                    <div id="dtSolucionados" class="row">
-                    <br>
-                    <br>
-                    <h1><i class="fa fa-ticket"></i> <strong>Tickets Completados (Solucionados)</strong></h1><br>
-                    <br>
-                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
-                        <thead id="header" class="">
-                        <tr style="background-color: lightgrey">
-                            <th style="border: solid 1px grey;">N° de ticket</th>
-                            <th style="border: solid 1px grey;">Estado</th>
-                            <th style="border: solid 1px grey;">Titulo</th>
-                            <th style="border: solid 1px grey;">Solicitante</th>
-                            <th style="border: solid 1px grey;">Fecha de Solicitud</th>
-                            <th style="border: solid 1px grey;">Fecha de Entrega</th>
-                            <th style="border: solid 1px grey;"></th>
-
-
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($tickets as $ticket)
-                            @if($ticket->estado=='Solucionado')
-                                <tr>
-                                    <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
-                                    @if($ticket->estado=='Recibido')
-                                        <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
-                                    @elseif($ticket->estado=='En proceso')
-                                        <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
-                                    @elseif($ticket->estado=='Solucionado')
-                                        <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
-                                    @elseif($ticket->estado=='Rechazado')
-                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
-                                    @endif
-                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
-                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
-                                    <td style="border: solid 1px grey;">
-                                        <small>
-                                            <?php
-                                            $date=date_create($ticket->fechasolicitud);
-                                            echo date_format($date,"d/m/Y");
-                                            ?>
-                                        </small>
-                                    </td>
-                                    <td style="border: solid 1px grey;">
-                                        <small>
-                                            @if($ticket->estado==='En proceso' )
-                                                <?php
-                                                $date=date_create($ticket->fechaentregareal);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            @elseif($ticket->estado==='Solucionado' || $ticket->estado==='Cerrado')
-                                                <?php
-                                                $date=date_create($ticket->fechasolucion);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            @elseif($ticket->estado=='Recibido')
-                                                <?php
-                                                $date=date_create($ticket->fechasolaprox);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            @endif
-                                        </small>
-                                    </td>
-                                    <td style="border: solid 1px grey;">
-                                        <a href="administrarticket?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
-                                            <i class="fa fa-eye"></i> Ver
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
-                        </tbody>
-                        <tfoot id="footer" class="hidden">
-                        <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                        </tr>
-                        </tfoot>
-                    </table>
                 </div>
-
-
-
-
-                <div id="dtRechazados" class="row hidden" style="border: 1px solid #FFFFFF">
-                    <br>
-                    <br>
-                    <h1><i class="fa fa-ticket"></i> <strong>Tickets Completados (Rechazados)</strong></h1><br>
-                    <br>
-                    <table id="reservasdenegadas" class="dataTables-example1 table table-hover table-responsive table-striped  table-mail dataTables-example" style="color: black;margin-top: 20px" >
-                        <thead id="header" class="">
-                        <tr style="background-color: lightgrey">
-                            <th style="border: solid 1px grey;">N° de ticket</th>
-                            <th style="border: solid 1px grey;">Estado</th>
-                            <th style="border: solid 1px grey;">Titulo</th>
-                            <th style="border: solid 1px grey;">Solicitante</th>
-                            <th style="border: solid 1px grey;">Fecha de Solicitud</th>
-                            <th style="border: solid 1px grey;">Fecha de Entrega</th>
-                            <th style="border: solid 1px grey;"></th>
-
-
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($tickets as $ticket)
-                            @if($ticket->estado=='Rechazado')
-                                <tr>
-                                    <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
-                                    @if($ticket->estado=='Recibido')
-                                        <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
-                                    @elseif($ticket->estado=='En proceso')
-                                        <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
-                                    @elseif($ticket->estado=='Solucionado')
-                                        <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
-                                    @elseif($ticket->estado=='Rechazado')
-                                        <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
-                                    @endif
-                                    <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
-                                    <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
-                                    <td style="border: solid 1px grey;">
-                                        <small>
-                                            <?php
-                                            $date=date_create($ticket->fechasolicitud);
-                                            echo date_format($date,"d/m/Y");
-                                            ?>
-                                        </small>
-                                    </td>
-                                    <td style="border: solid 1px grey;">
-                                        <small>
-                                            @if($ticket->estado==='En proceso' )
-                                                <?php
-                                                $date=date_create($ticket->fechaentregareal);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            @elseif($ticket->estado==='Solucionado' || $ticket->estado==='Cerrado')
-                                                <?php
-                                                $date=date_create($ticket->fechasolucion);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            @elseif($ticket->estado=='Recibido')
-                                                <?php
-                                                $date=date_create($ticket->fechasolaprox);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            @endif
-                                        </small>
-                                    </td>
-                                    <td style="border: solid 1px grey;">
-                                        <a href="administrarticket?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
-                                            <i class="fa fa-eye"></i> Ver
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endif
-                        @endforeach
-                        </tbody>
-                        <tfoot id="footer" class="hidden">
-                        <tr>
-                            <th>Rendering engine</th>
-                            <th>Browser</th>
-                            <th>Platform(s)</th>
-                            <th>Engine version</th>
-                            <th>CSS grade</th>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                </div>
-
-
-
-                
-
-
-                <div class="ibox-content hidden" id="cerrados" style="width:100%;border: 1px solid #FFFFFF">
-                    <h1><i class="fa fa-ticket"></i> <strong>Tickets Cerrados</strong></h1><br>
-                    
-
-                    <br>
-                        <table id="reservasdenegadas" 
-                        class="dataTables-example1 table table-hover table-responsive table-striped
-                        table-mail dataTables-example" style="color: black;margin-top: 20px;width:100%;" >
-                            <thead id="header" class="">
-                            <tr style="background-color: lightgrey">
-                                <th style="border: solid 1px grey;">N° de ticket</th>
-                                <th style="border: solid 1px grey;">Estado</th>
-                                <th style="border: solid 1px grey;">Titulo</th>
-                                <th style="border: solid 1px grey;">Solicitante</th>
-                                <th style="border: solid 1px grey;">Fecha de Solicitud</th>
-                                <th style="border: solid 1px grey;">Fecha de Entrega</th>
-                                <th style="border: solid 1px grey;"></td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach($tickets as $ticket)
-                                @if($ticket->estado=='Cerrado')
-                                    <tr>
-                                        <td style="border: solid 1px grey; background-color: lightblue"><b>{{$ticket->id}}</b></td>
-                                        @if($ticket->estado=='Recibido')
-                                            <td style="border: solid 1px grey;"><span class="label label-success">{{$ticket->estado}}</span></td>
-                                        @elseif($ticket->estado=='En proceso')
-                                            <td style="border: solid 1px grey;"><span class="label label-warning">{{$ticket->estado}}</span></td>
-                                        @elseif($ticket->estado=='Solucionado')
-                                            <td style="border: solid 1px grey;"><span class="label label-primary">{{$ticket->estado}}</span></td>
-                                        @elseif($ticket->estado=='Cerrado')
-                                            <td style="border: solid 1px grey;"><span class="label label-danger">{{$ticket->estado}}</span></td>
-                                        @endif
-                                        <td style="border: solid 1px grey;">{{$ticket->titulo}}</td>
-                                        <td style="border: solid 1px grey;"><small><b>{{$ticket->nombresolicitante}} {{$ticket->apellidosolicitante}}</b></small></td>
-                                        <td style="border: solid 1px grey;">
-                                            <small>
-                                                <?php
-                                                $date=date_create($ticket->fechasolicitud);
-                                                echo date_format($date,"d/m/Y");
-                                                ?>
-                                            </small>
-                                        </td>
-                                        <td style="border: solid 1px grey;">
-                                            <small>
-                                                @if($ticket->estado==='En proceso' )
-                                                    <?php
-                                                    $date=date_create($ticket->fechaentregareal);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @elseif($ticket->estado==='Solucionado' || $ticket->estado==='Cerrado')
-                                                    <?php
-                                                    $date=date_create($ticket->fechasolucion);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @elseif($ticket->estado=='Recibido')
-                                                    <?php
-                                                    $date=date_create($ticket->fechasolaprox);
-                                                    echo date_format($date,"d/m/Y");
-                                                    ?>
-                                                @endif
-                                            </small>
-                                        </td>
-                                        <td style="border: solid 1px grey;">
-                                            <a href="administrarticket?id={{$ticket->id}}" id="{{$ticket->id}}" type="button" style="border:solid 1px black" class="btn btn-md btn-default btn-outline tck_infoticket" style="color:black">
-                                                <i class="fa fa-eye"></i> Ver
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                            </tbody>
-                            <tfoot id="footer" class="hidden">
-                            <tr>
-                                <th>Rendering engine</th>
-                                <th>Browser</th>
-                                <th>Platform(s)</th>
-                                <th>Engine version</th>
-                                <th>CSS grade</th>
-                            </tr>
-                            </tfoot>
-                        </table>
-
-                    </div>
-
-
-
-   
-   
-        <div id="recibidosSolucionados" class="ibox-content hidden" style="border: 1px solid #FFFFFF">
-
-        </div>
-
-           
-
             </div>
         </div>
     </div>

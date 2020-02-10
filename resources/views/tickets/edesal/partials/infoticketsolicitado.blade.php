@@ -43,7 +43,7 @@
                     <p><a href="rpt_ticketdetalles?id={{$ticket->id}}" style="color:black" class="btn  btn-md pull-right btn-outline btn-default" type="button"><i class="fa fa-file-pdf-o"></i> Generar reporte</a></p>
                     @else
                 @endif
-                    <a href="tck_solicitadosedesal" class="btn btn-default" style="color:black"><i class="fa fa-arrow-left"></i> Regresar</a>
+                    <a href="tck_edesalshow" class="btn btn-default" style="color:black"><i class="fa fa-arrow-left"></i> Regresar</a>
             </div>
         </div>
         <div class="ibox-content">

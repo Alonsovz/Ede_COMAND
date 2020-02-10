@@ -720,7 +720,9 @@ class TicketController extends Controller
     public function showEdesal()
     {
         $tickets  = $this->ticket->getTicketsStaff(Session::get('idusuario'));
-        $conteo   = $this->ticket->conteoTicketsStaff(Session::get('idusuario'));
+
+        $ticketsSoli = $this->ticket->getTicketsNoStaff(Session::get('idusuario'));
+
         $categorias = DB::table('categorias')->get();
         $sistemas = DB::table('sistemas')->get();
 
@@ -745,6 +747,23 @@ class TicketController extends Controller
         $recha =  DB::table('tickets')->where('estado_id',12)->
         where('us_asignado',Session::get('idusuario'))->count();
 
+
+        $recibidosSoli =  DB::table('tickets')->where('estado_id',2)->
+        where('us_solicitante',Session::get('idusuario'))->count();
+
+        $processSoli =  DB::table('tickets')->where('estado_id',5)->
+        where('us_solicitante',Session::get('idusuario'))->count();
+
+
+        $soluSoli =  DB::table('tickets')->where('estado_id',6)->
+        where('us_solicitante',Session::get('idusuario'))->count();
+
+        $rechaSoli =  DB::table('tickets')->where('estado_id',12)->
+        where('us_solicitante',Session::get('idusuario'))->count();
+
+        $cerradoSoli =  DB::table('tickets')->where('estado_id',8)->
+        where('us_solicitante',Session::get('idusuario'))->count();
+
         $usuarios = $this->user->getUsuariosStaff();
         $dedicado = 0;
 
@@ -758,10 +777,11 @@ class TicketController extends Controller
         }
 
         return view('tickets.edesal.show')->with('tickets',$tickets)->with('dedicado',$dedicado)->with('usuarios',$usuarios)
-            ->with('conteo',$conteo)->with('categorias',$categorias)->with('sistemas',$sistemas)
+            ->with('ticketsSoli',$ticketsSoli)->with('categorias',$categorias)->with('sistemas',$sistemas)
             ->with('recibidos',$recibidos)->with('process',$process)->with('pausa',$pausa)
             ->with('cerrados',$cerrados)->with('solu',$solu)
-            ->with('recha',$recha);
+            ->with('recha',$recha)->with('recibidosSoli',$recibidosSoli)->with('processSoli',$processSoli)->with('soluSoli',$soluSoli)
+            ->with('rechaSoli',$rechaSoli)->with('cerradoSoli',$cerradoSoli);
 
         //return response()->json(($dedicado));
     }

@@ -22,8 +22,8 @@
 @section('contenido')
 
 <div class="ibox-title" style="padding: 5px">
-<a href="tck_solicitadosedesal" style="margin-right: 5px" class="btn  btn-warning btn-md pull-left"   type="button" ><i class="fa fa-ticket" ></i> Tickets solictados</a>
-    <a href="tck_edesalshow" style="margin-left: 5px" class="btn btn-info btn-md pull-left"  type="button"><i class="fa fa-ticket"></i>Tickets Recibidos</a>
+
+<a href="tck_edesalshow" style="margin-left: 5px" class="btn btn-info btn-md pull-left"  type="button"><i class="fa fa-ticket"></i>Pantalla General</a>
 </div>
 <br>
     <div class="btn-group">
